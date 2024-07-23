@@ -1,0 +1,5 @@
+*.DS_Store
+*.jpg
+/gateway/images
+/gateway/logs
+/gateway/server/models
