@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from PIL import Image
 import numpy as np
 import uuid
@@ -15,6 +16,7 @@ def rel_path(pathname):
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/healthcheck")
 def hello_world():
