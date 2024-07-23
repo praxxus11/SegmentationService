@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ./gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./images:/home/app/gateway/images
+      - ./logs:/home/app/gateway/logs
