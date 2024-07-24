@@ -37,6 +37,9 @@ def predict():
         ip = request.environ['REMOTE_ADDR']
         logger.info(f"Received image for {ip}.")
         image = Image.open(file.stream)
+        # Need to remove alpha channel.
+        if image.mode in ("RGBA", "P"):
+            image = image.convert("RGB")
         try:
             imgid = str(uuid.uuid1())
             image.save(rel_path(os.path.join("../images", imgid + ".jpg")))
