@@ -3,3 +3,4 @@
 images
 logs
 /gateway/server/models
+*.tar

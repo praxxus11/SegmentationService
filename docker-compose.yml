@@ -8,3 +8,5 @@ services:
     volumes:
       - ./images:/home/app/gateway/images
       - ./logs:/home/app/gateway/logs
+    tty: true
+    stdin_open: true

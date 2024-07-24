@@ -43,15 +43,15 @@ def predict():
         npimg = np.array(image)
         
         logger.info(f"Starting segmentation for {imgid}.")
-        subimgs, rles = segmentation.predict(npimg, 0.95)
-        logger.info(f"Finished segmentation: predicted {len(rles)} pitchers for {imgid}.")
+        subimgs, base64s = segmentation.predict(npimg, 0.95)
+        logger.info(f"Finished segmentation: predicted {len(base64s)} pitchers for {imgid}.")
 
         logger.info(f"Starting classification for {imgid}.")
         for i, img in enumerate(subimgs):
-            rles[i]['classification_preds'] = classification.predict(img)
-            logger.info(f"Predicted: {rles[i]['classification_preds']} for {imgid}.")
+            base64s[i]['classification_preds'] = classification.predict(img)
+            logger.info(f"Predicted: {base64s[i]['classification_preds']} for {imgid}.")
         logger.info(f"Finished classification for {imgid}.")
         
-        return jsonify(rles), 200
+        return jsonify(base64s), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 400
