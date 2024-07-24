@@ -25,5 +25,7 @@ COPY server/models/ ./server/models
 COPY server/*.py ./server
 COPY server/species.json ./server
 COPY ./*.py ./
+COPY server/templates/ ./server/templates
+COPY server/static/ ./server/static
 
 CMD ["gunicorn", "-c", "gunicorn_conf.py", "app:gunicorn_app"]
