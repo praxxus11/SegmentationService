@@ -25,5 +25,5 @@ jobs:
           docker buildx build \
             --platform linux/arm64 \
             --tag registry.gitlab.com/segmentation964330/service/gateway \
-            --push . \
+            --push \
             ./gateway
