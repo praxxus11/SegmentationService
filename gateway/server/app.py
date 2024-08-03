@@ -9,10 +9,6 @@ import logging
 import server.classification as classification
 import server.segmentation as segmentation
 
-def rel_path(pathname):
-    script_dir = os.path.dirname(__file__)
-    return os.path.join(script_dir, pathname)
-
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -42,7 +38,7 @@ def predict():
             image = image.convert("RGB")
         try:
             imgid = str(uuid.uuid1())
-            image.save(rel_path(os.path.join("../images", imgid + ".jpg")))
+            image.save(os.path.join(os.environ['IMAGES_DIR'], imgid + ".jpg"))
             logger.info(f"Saved img as {imgid} - {ip}.")
         except Exception as e:
             logger.warn(f"Failed to save img: {imgid} - {str(e)} - {ip}")

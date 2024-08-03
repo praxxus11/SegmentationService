@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+  pull-request:
+    branches:
+      - main
+
 jobs:
   build-gateway:
     runs-on: ubuntu-20.04

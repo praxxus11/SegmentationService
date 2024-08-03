@@ -15,26 +15,25 @@ import base64
 
 logger = logging.getLogger(__name__)
 
-def rel_path(pathname):
-    script_dir = os.path.dirname(__file__)
-    return os.path.join(script_dir, pathname)
 
-def get_model(path=None):
+def get_segmentation_model():
     logger.info("Loading segmentation model.")
     cfg = get_cfg()
     point_rend.add_pointrend_config(cfg)
-    cfg.merge_from_file(rel_path("../detectron2/projects/PointRend/configs/InstanceSegmentation/pointrend_rcnn_X_101_32x8d_FPN_3x_coco.yaml"))
+    path_to_model_cfg = "detectron2/projects/PointRend/configs/InstanceSegmentation/pointrend_rcnn_X_101_32x8d_FPN_3x_coco.yaml"
+    cfg.merge_from_file(os.path.join(os.environ["WORKING_DIR"], path_to_model_cfg))
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
     cfg.MODEL.POINT_HEAD.NUM_CLASSES = 1
     cfg.MODEL.DEVICE = 'cpu'
     
     model = build_model(cfg)
     checkpointer = DetectionCheckpointer(model)
-    checkpointer.load(path)
+    model_path = os.path.join(os.environ["MODELS_DIR"], os.environ["SEGMENTATION_MODEL_NAME"])
+    checkpointer.load(model_path)
     logger.info("Done loading segmentation model.")
     return model
 
-model = get_model(rel_path('./models/pointrend_weights.pth'))
+model = get_segmentation_model()
 
 # Given 0/1 numpy array masks and img, cuts out the actual imgs
 def get_numpy_imgs_from_masks(np_img, masks):

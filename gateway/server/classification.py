@@ -8,11 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def rel_path(pathname):
-    script_dir = os.path.dirname(__file__)
-    return os.path.join(script_dir, pathname)
-
-with open(rel_path('./species.json')) as f:
+with open(os.path.join(os.environ["MODELS_DIR"], os.environ["SPECIES_LIST"])) as f:
     SPECIES_LIST = json.load(f)
 NUM_CLASSES = len(SPECIES_LIST)
 
@@ -26,7 +22,8 @@ def get_classification_model():
         torch.nn.Linear(inp_feats, NUM_CLASSES),
     )
     model = model.cpu()
-    model.load_state_dict(torch.load(rel_path('./models/swinv2_weights.pth'), map_location ='cpu'))
+    model_path = os.path.join(os.environ["MODELS_DIR"], os.environ["CLASSIFICATION_MODEL_NAME"])
+    model.load_state_dict(torch.load(model_path, map_location ='cpu'))
     logger.info("Done loading classification model.")
     return model
 

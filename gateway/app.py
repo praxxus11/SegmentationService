@@ -2,12 +2,8 @@
 import logging
 import os
 
-def rel_path(pathname):
-    script_dir = os.path.dirname(__file__)
-    return os.path.join(script_dir, pathname)
-
 logging.basicConfig(
-    filename=rel_path("./logs/app.log"),
+    filename=os.path.join(os.environ["LOGS_DIR"], "gateway.log"),
     filemode='a',
     level=logging.DEBUG,
     format='%(asctime)s.%(msecs)03d - %(name)s - %(levelname)s - %(message)s',

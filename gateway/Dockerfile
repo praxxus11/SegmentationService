@@ -1,6 +1,6 @@
 FROM python:3.11.9-slim-bullseye
 
-WORKDIR /home/app/gateway
+WORKDIR /home
 
 RUN apt-get update
 
@@ -21,11 +21,14 @@ RUN python -m pip install -e detectron2
 COPY ./requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPY server/models/ ./server/models
-COPY server/*.py ./server
-COPY server/species.json ./server
-COPY ./*.py ./
-COPY server/templates/ ./server/templates
-COPY server/static/ ./server/static
+COPY . .
+
+ENV WORKING_DIR="/home"
+ENV LOGS_DIR="/home/artifacts/logs/"
+ENV IMAGES_DIR="/home/artifacts/images/"
+ENV MODELS_DIR="/home/artifacts/models/"
+ENV SEGMENTATION_MODEL_NAME="pointrend_weights.pth"
+ENV CLASSIFICATION_MODEL_NAME="swinv2_weights.pth"
+ENV SPECIES_LIST="species.json"
 
 CMD ["gunicorn", "-c", "gunicorn_conf.py", "app:gunicorn_app"]

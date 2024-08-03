@@ -2,5 +2,5 @@
 *.jpg
 images
 logs
-/gateway/server/models
+/artifacts/
 *.tar
