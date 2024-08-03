@@ -1,6 +1,6 @@
 services:
   gateway:
-    image: test
+    image: gateway
     ports:
       - "80:8000"
     volumes:

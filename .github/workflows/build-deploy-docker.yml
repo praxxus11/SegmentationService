@@ -11,5 +11,9 @@ jobs:
   build-gateway:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
-      - run: ls
+      - name: Check out repo.
+        uses: actions/checkout@v4
+      - name: Build gateway image.
+        run: docker build -t registry.gitlab.com/segmentation964330/service/gateway ./gateway
+      - name: Check img.
+        run: docker images
