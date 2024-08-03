@@ -1,22 +1,4 @@
-FROM python:3.11.9-slim-bullseye
-
-WORKDIR /home
-
-RUN apt-get update
-
-# Require cv2 for detectron2.projects.point_rend
-RUN apt-get install --assume-yes python3-opencv
-RUN pip install opencv-python
-
-# Require g++ for detectron2
-RUN apt-get install --assume-yes g++
-RUN apt-get install --assume-yes git
-
-RUN git clone --depth 1 https://github.com/facebookresearch/detectron2.git
-# # Putting these here instead of requirements for caching.
-RUN pip install torch==2.3.0 --index-url https://download.pytorch.org/whl/cpu
-RUN pip install torchvision==0.18.0 --index-url https://download.pytorch.org/whl/cpu
-RUN python -m pip install -e detectron2
+FROM registry.gitlab.com/segmentation964330/service/torchbase
 
 COPY ./requirements.txt ./
 RUN pip install -r requirements.txt
