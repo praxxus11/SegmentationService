@@ -13,9 +13,9 @@ RUN apt-get install --assume-yes g++
 RUN apt-get install --assume-yes git
 
 RUN git clone --depth 1 https://github.com/facebookresearch/detectron2.git
-# Putting these here instead of requirements for caching.
-RUN pip install torch==2.3.0
-RUN pip install torchvision==0.18.0
+# # Putting these here instead of requirements for caching.
+RUN pip install torch==2.3.0 --index-url https://download.pytorch.org/whl/cpu
+RUN pip install torchvision==0.18.0 --index-url https://download.pytorch.org/whl/cpu
 RUN python -m pip install -e detectron2
 
 COPY ./requirements.txt ./
