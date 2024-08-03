@@ -13,6 +13,11 @@ jobs:
     steps:
       - name: Check out repo.
         uses: actions/checkout@v4
+      - name: Sign in to segmentation gitlab registry.
+        env:
+          GITLAB_REGISTRY_USERNAME: ${{ secrets.GITLAB_REGISTRY_USERNAME }}
+          GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
+        run: echo "$GITLAB_REGISTRY_TOKEN" | docker login -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
       - name: Build gateway image.
         run: docker build -t registry.gitlab.com/segmentation964330/service/gateway ./gateway
       - name: Check img.
