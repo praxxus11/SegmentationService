@@ -1,16 +1,3 @@
-# Setting up logging configs.
-import logging
-import os
-
-logging.basicConfig(
-    filename=os.path.join(os.environ["LOGS_DIR"], "gateway.log"),
-    filemode='a',
-    level=logging.DEBUG,
-    format='%(asctime)s.%(msecs)03d - %(name)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-
-# Actual server stuff.
 from server.app import app
 
 if __name__ == '__main__':
