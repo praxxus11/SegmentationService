@@ -23,9 +23,9 @@ jobs:
       - name: Build gateway image.
         run: |
           docker buildx build \
-            --file ./gateway \
+            --file ./gateway/Dockerfile \
             --platform linux/arm64 \
-            -t registry.gitlab.com/segmentation964330/service/gateway \
+            --tag registry.gitlab.com/segmentation964330/service/gateway \
             --push .
       - name: Check img.
         run: docker images
