@@ -19,6 +19,6 @@ jobs:
           GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
         run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
       - name: Build gateway image.
-        run: docker build --platform linux/arm64 -t registry.gitlab.com/segmentation964330/service/gateway ./gateway
+        run: docker buildx build --platform linux/arm64 -t registry.gitlab.com/segmentation964330/service/gateway ./gateway
       - name: Check img.
         run: docker images
