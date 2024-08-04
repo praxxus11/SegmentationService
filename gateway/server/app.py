@@ -1,3 +1,6 @@
+import server.init
+server.init.init()
+
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from PIL import Image
@@ -8,10 +11,6 @@ import logging
 
 import server.classification as classification
 import server.segmentation as segmentation
-
-def rel_path(pathname):
-    script_dir = os.path.dirname(__file__)
-    return os.path.join(script_dir, pathname)
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ def gui():
 @app.route("/healthcheck")
 def hello_world():
     logger.info("Healthcheck.")
-    return "", 200
+    return "hello", 200
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -42,7 +41,7 @@ def predict():
             image = image.convert("RGB")
         try:
             imgid = str(uuid.uuid1())
-            image.save(rel_path(os.path.join("../images", imgid + ".jpg")))
+            image.save(os.path.join(os.environ['IMAGES_DIR'], imgid + ".jpg"))
             logger.info(f"Saved img as {imgid} - {ip}.")
         except Exception as e:
             logger.warn(f"Failed to save img: {imgid} - {str(e)} - {ip}")
