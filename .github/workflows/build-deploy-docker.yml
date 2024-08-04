@@ -12,10 +12,28 @@ env:
   GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-20.04
+    permissions:
+      pull-requests: read
+    outputs:
+      gateway: ${{ steps.paths_filter.outputs.gateway }}
+      nginx: ${{ steps.paths_filter.outputs.nginx }}
+    steps:
+      - name: Execute paths filter.
+        uses: dorny/paths-filter@v3
+        id: paths_filter
+        with:
+          filters: |
+            gateway:
+              - "./gateway/**"
+            nginx:
+              - "./nginx/**"
   build-gateway:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.gateway == 'true' }}
     runs-on: ubuntu-20.04
     steps:
-      - run: ls -a
       - name: Check out repo.
         uses: actions/checkout@v4
       - name: Setup buildx
@@ -29,9 +47,27 @@ jobs:
             --tag registry.gitlab.com/segmentation964330/service/gateway \
             --push \
             ./gateway
+  build-nginx:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.nginx == 'true' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repo.
+        uses: actions/checkout@v4
+      - name: Setup buildx
+        run:  docker buildx create --use
+      - name: Sign in to segmentation gitlab registry.
+        run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
+      - name: Build nginx image.
+        run: |
+          docker buildx build \
+            --platform linux/arm64 \
+            --tag registry.gitlab.com/segmentation964330/service/nginx \
+            --push \
+            ./nginx
   deploy:
     runs-on: ubuntu-20.04
-    needs: [build-gateway]
+    needs: [build-gateway, build-nginx]
     steps:
       - name: Check out repo.
         uses: actions/checkout@v4
@@ -55,3 +91,4 @@ jobs:
             sudo docker compose down
             sudo docker compose pull
             sudo docker compose up --detach
+            sudo docker image prune --force
