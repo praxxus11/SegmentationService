@@ -12,24 +12,7 @@ env:
   GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-20.04
-    outputs:
-      gateway: ${{ steps.paths_filter.outputs.gateway }}
-      nginx: ${{ steps.paths_filter.outputs.nginx }}
-    steps:
-      - name: Execute paths filter.
-        uses: dorny/paths-filter@v3
-        id: paths_filter
-        with:
-          filters: |
-            gateway:
-              - "./gateway/**"
-            nginx:
-              - "./nginx/**"
   build-gateway:
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.gateway == 'true' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Check out repo.
@@ -46,8 +29,6 @@ jobs:
             --push \
             ./gateway
   build-nginx:
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.nginx == 'true' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Check out repo.
@@ -66,7 +47,6 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     needs: [build-gateway, build-nginx]
-    if: ${{ always() && !failure() && !cancelled() }}
     steps:
       - name: Check out repo.
         uses: actions/checkout@v4
