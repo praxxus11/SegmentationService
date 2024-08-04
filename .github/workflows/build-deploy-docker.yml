@@ -56,3 +56,5 @@ jobs:
           script: |
             echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
             sudo docker compose down
+            sudo docker compose pull
+            sudo docker compose up --detach
