@@ -68,6 +68,7 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     needs: [build-gateway, build-nginx]
+    if: ${{ always() && !failure() && !cancelled() }}
     steps:
       - name: Check out repo.
         uses: actions/checkout@v4
