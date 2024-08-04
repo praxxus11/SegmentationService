@@ -24,7 +24,7 @@ def gui():
 @app.route("/healthcheck")
 def hello_world():
     logger.info("Healthcheck.")
-    return "hello", 200
+    return "Hello world!", 200
 
 @app.route("/predict", methods=["POST"])
 def predict():

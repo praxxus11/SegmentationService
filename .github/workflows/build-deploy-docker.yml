@@ -24,7 +24,6 @@ jobs:
         uses: dorny/paths-filter@v3
         id: paths_filter
         with:
-          base: ${{ github.ref }}
           filters: |
             gateway:
               - "./gateway/**"
