@@ -1,4 +1,19 @@
 services:
+  redis:
+    container_name: redis
+    image: redis:7.0.15-alpine3.20
+    command: redis-server --bind redis --port 6379
+    tty: true
+    stdin_open: true
+  inference:
+    container_name: inference
+    image: registry.gitlab.com/segmentation964330/service/inference
+    build:
+      context: ./inference
+    depends_on:
+      - redis
+    tty: true
+    stdin_open: true
   gateway:
     container_name: gateway
     image: registry.gitlab.com/segmentation964330/service/gateway
@@ -8,6 +23,8 @@ services:
       - ./artifacts/images:/home/artifacts/images
       - ./artifacts/logs:/home/artifacts/logs
       - ./artifacts/models:/home/artifacts/models
+    depends_on:
+      - redis
     tty: true
     stdin_open: true
   nginx:

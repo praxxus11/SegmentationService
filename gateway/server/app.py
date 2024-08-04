@@ -9,6 +9,13 @@ import uuid
 import os
 import logging
 
+import redis
+import rq
+
+redis_conn = redis.Redis(host="redis", port=6379)
+print(redis_conn)
+q = rq.Queue("segmentation_queue", connection=redis_conn)
+
 import server.classification as classification
 import server.segmentation as segmentation
 
@@ -61,3 +68,20 @@ def predict():
         return jsonify(base64s), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 400
+
+@app.route("/upload/<word>")
+def upload(word):
+    job = q.enqueue("segmentation.inference.infer", word)
+    return "submited word: " + word + ", job id: " + job.id, 200
+
+@app.route("/status/<job_id>")
+def status(job_id):
+    try:
+        job = rq.job.Job.fetch(job_id, connection=redis_conn)
+        job_status = job.get_status(refresh=True)
+        if job_status != 'finished':
+            return job.get_status(), 200
+        else:
+            return job.result, 200
+    except Exception as e:
+        return str(e), 200
