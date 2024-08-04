@@ -34,10 +34,11 @@ jobs:
     steps:
       - name: Check out repo.
         uses: actions/checkout@v4
-      - name: Copy docker compose file to oci.
+      - name: Copy docker compose file to OCI.
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.ORACLE_HOST }}
+          username: ${{ secrets.ORACLE_USERNAME }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
           source: "./docker-compose.yml"
           target: "."
