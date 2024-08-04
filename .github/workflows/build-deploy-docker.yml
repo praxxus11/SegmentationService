@@ -19,7 +19,9 @@ jobs:
     outputs:
       gateway: ${{ steps.paths_filter.outputs.gateway }}
       nginx: ${{ steps.paths_filter.outputs.nginx }}
-    steps: 
+    steps:
+      - name: Check out repo.
+        uses: actions/checkout@v4
       - name: Execute paths filter.
         uses: dorny/paths-filter@v3
         id: paths_filter
