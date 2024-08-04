@@ -1,6 +1,8 @@
 services:
   gateway:
-    image: gateway
+    image: registry.gitlab.com/segmentation964330/service/gateway
+    build:
+      context: ./gateway
     ports:
       - "80:8000"
     volumes:
@@ -8,4 +10,4 @@ services:
       - ./artifacts/logs:/home/artifacts/logs
       - ./artifacts/models:/home/artifacts/models
     tty: true
-    stdin_open: true
+    stdin_open: false

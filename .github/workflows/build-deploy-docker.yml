@@ -11,19 +11,33 @@ jobs:
   build-gateway:
     runs-on: ubuntu-20.04
     steps:
+      - run: ls -a
+      # - name: Check out repo.
+      #   uses: actions/checkout@v4
+      # - name: Setup buildx
+      #   run:  docker buildx create --use
+      # - name: Sign in to segmentation gitlab registry.
+      #   env:
+      #     GITLAB_REGISTRY_USERNAME: ${{ secrets.GITLAB_REGISTRY_USERNAME }}
+      #     GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
+      #   run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
+      # - name: Build gateway image.
+      #   run: |
+      #     docker buildx build \
+      #       --platform linux/arm64 \
+      #       --tag registry.gitlab.com/segmentation964330/service/gateway \
+      #       --push \
+      #       ./gateway
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: [build-gateway]
+    steps:
       - name: Check out repo.
         uses: actions/checkout@v4
-      - name: Setup buildx
-        run:  docker buildx create --use
-      - name: Sign in to segmentation gitlab registry.
-        env:
-          GITLAB_REGISTRY_USERNAME: ${{ secrets.GITLAB_REGISTRY_USERNAME }}
-          GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
-        run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
-      - name: Build gateway image.
-        run: |
-          docker buildx build \
-            --platform linux/arm64 \
-            --tag registry.gitlab.com/segmentation964330/service/gateway \
-            --push \
-            ./gateway
+      - name: Copy docker compose file to oci.
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ORACLE_HOST }}
+          key: ${{ secrets.ORACLE_SSH_KEY }}
+          source: "./docker-compose.yml"
+          target: "."
