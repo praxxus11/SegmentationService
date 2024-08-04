@@ -7,6 +7,10 @@ on:
     branches:
       - main
 
+env:
+  GITLAB_REGISTRY_USERNAME: ${{ secrets.GITLAB_REGISTRY_USERNAME }}
+  GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
+
 jobs:
   build-gateway:
     runs-on: ubuntu-20.04
@@ -42,3 +46,13 @@ jobs:
           key: ${{ secrets.ORACLE_SSH_KEY }}
           source: "./docker-compose.yml"
           target: "."
+      - name: Pull docker and deploy.
+        uses: appleboy/ssh-action@1.0.3
+        with:
+          host: ${{ secrets.ORACLE_HOST }}
+          username: ${{ secrets.ORACLE_USERNAME }}
+          key: ${{ secrets.ORACLE_SSH_KEY }}
+          envs: GITLAB_REGISTRY_USERNAME, GITLAB_REGISTRY_TOKEN
+          script: |
+            echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
+            ls -a
