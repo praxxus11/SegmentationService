@@ -14,14 +14,10 @@ env:
 jobs:
   detect-changes:
     runs-on: ubuntu-20.04
-    permissions:
-      pull-requests: read
     outputs:
       gateway: ${{ steps.paths_filter.outputs.gateway }}
       nginx: ${{ steps.paths_filter.outputs.nginx }}
     steps:
-      - name: Check out repo.
-        uses: actions/checkout@v4
       - name: Execute paths filter.
         uses: dorny/paths-filter@v3
         id: paths_filter
