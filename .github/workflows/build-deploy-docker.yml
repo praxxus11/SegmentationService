@@ -35,4 +35,6 @@ jobs:
           script: |
             echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
             cd SegmentationService
-            ls -a
+            sudo docker compose build
+            false || echo hi
+            rm -rf SegmentationService
