@@ -44,7 +44,10 @@ def predict():
 @app.route("/status/<job_id>")
 def status(job_id):
     try:
-        job_status = job_queue.get_job_status(job_id)
+        job_status, code = job_queue.get_job_status(job_id)
     except Exception as e:
+        logger.warn(f"Unable to find job {job_id}: {str(e)}.")
         return jsonify({'error': str(e)}), 404
-    return jsonify(job_status)
+    if job_status['done']:
+        logger.info(f"Job {job_id} queried with finished status.")
+    return jsonify(job_status), code
