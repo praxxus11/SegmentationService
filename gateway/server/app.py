@@ -32,11 +32,11 @@ def predict():
         image = image.convert("RGB")
         image = ImageOps.exif_transpose(image)
 
-        img_and_job_id = str(uuid.uuid1())
+        img_and_job_id = str(uuid.uuid4())
         imgname = img_and_job_id + '.jpg'
         image.save(os.path.join(os.environ['IMAGES_DIR'], imgname))
+        logger.info(f"Saved image: {imgname}.")
         job_id = job_queue.add_task("inference.infer", imgname, img_and_job_id)
-        logger.info(f"Saved image {imgname} with job id {job_id}.")
         return job_id, 200
     except Exception as e:
         logger.error(f"Error in parsing and submitting image: {e}.")
