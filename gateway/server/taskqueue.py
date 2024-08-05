@@ -31,7 +31,7 @@ class TaskQueue:
         return ret, 500
 
     def add_task(self, function_name, img_name, id):
-        logger.info(f"Added task with args: {' '.join(map(str, args))}.")
+        logger.info(f"Added image {img_name} to queue.")
         created_job = self.task_queue.enqueue(function_name, img_name, job_id=id, result_ttl=60, failure_ttl=0)
         return created_job.id
 
