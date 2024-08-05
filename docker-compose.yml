@@ -10,6 +10,10 @@ services:
     image: registry.gitlab.com/segmentation964330/service/inference
     build:
       context: ./inference
+    volumes:
+      - ./artifacts/images:/home/artifacts/images
+      - ./artifacts/logs:/home/artifacts/logs
+      - ./artifacts/models:/home/artifacts/models
     depends_on:
       - redis
     tty: true
@@ -22,7 +26,6 @@ services:
     volumes:
       - ./artifacts/images:/home/artifacts/images
       - ./artifacts/logs:/home/artifacts/logs
-      - ./artifacts/models:/home/artifacts/models
     depends_on:
       - redis
     tty: true
