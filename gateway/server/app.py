@@ -31,11 +31,12 @@ def predict():
         image = Image.open(file.stream)
         image = image.convert("RGB")
         image = ImageOps.exif_transpose(image)
-        imgname = str(uuid.uuid1()) + '.jpg'
+
+        img_and_job_id = str(uuid.uuid1())
+        imgname = img_and_job_id + '.jpg'
         image.save(os.path.join(os.environ['IMAGES_DIR'], imgname))
-        job_id = job_queue.add_task("inference.infer", imgname)
-        addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        logger.info(f"Saved image {imgname} for {addr}.")
+        job_id = job_queue.add_task("inference.infer", imgname, img_and_job_id)
+        logger.info(f"Saved image {imgname} with job id {job_id}.")
         return job_id, 200
     except Exception as e:
         logger.error(f"Error in parsing and submitting image: {e}.")
