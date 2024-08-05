@@ -14,6 +14,7 @@ services:
       - ../artifacts/images:/home/artifacts/images
       - ../artifacts/logs:/home/artifacts/logs
       - ../artifacts/models:/home/artifacts/models
+      - ../artifacts/db:/home/artifacts/db
     depends_on:
       - redis
     tty: true
