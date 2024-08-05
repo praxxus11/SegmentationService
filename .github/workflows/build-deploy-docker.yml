@@ -31,6 +31,7 @@ jobs:
           host: ${{ secrets.ORACLE_HOST }}
           username: ${{ secrets.ORACLE_USERNAME }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
+          script_stop: true
           envs: GITLAB_REGISTRY_USERNAME, GITLAB_REGISTRY_TOKEN
           script: |
             echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
