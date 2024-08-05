@@ -36,8 +36,5 @@ class TaskQueue:
         return created_job.id
 
     def get_job_status(self, job_id):
-        try:
-            job = rq.job.Job.fetch(job_id, connection=self.redis_conn)
-        except Exception as e:
-            return str(e)
+        job = rq.job.Job.fetch(job_id, connection=self.redis_conn)
         return self.format_job_status(job)

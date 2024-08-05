@@ -43,4 +43,8 @@ def predict():
 
 @app.route("/status/<job_id>")
 def status(job_id):
-    return job_queue.get_job_status(job_id)
+    try:
+        job_status = job_queue.get_job_status(job_id)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 404
+    return jsonify(job_status)
