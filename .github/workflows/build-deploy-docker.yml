@@ -12,41 +12,40 @@ env:
   GITLAB_REGISTRY_TOKEN: ${{ secrets.GITLAB_REGISTRY_TOKEN }}
 
 jobs:
-  build-gateway:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Check out repo.
-        uses: actions/checkout@v4
-      - name: Setup buildx
-        run:  docker buildx create --use
-      - name: Sign in to segmentation gitlab registry.
-        run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
-      - name: Build gateway image.
-        run: |
-          docker buildx build \
-            --platform linux/arm64 \
-            --tag registry.gitlab.com/segmentation964330/service/gateway \
-            --push \
-            ./gateway
-  build-nginx:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Check out repo.
-        uses: actions/checkout@v4
-      - name: Setup buildx
-        run:  docker buildx create --use
-      - name: Sign in to segmentation gitlab registry.
-        run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
-      - name: Build nginx image.
-        run: |
-          docker buildx build \
-            --platform linux/arm64 \
-            --tag registry.gitlab.com/segmentation964330/service/nginx \
-            --push \
-            ./nginx
+  # build-gateway:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Check out repo.
+  #       uses: actions/checkout@v4
+  #     - name: Setup buildx
+  #       run:  docker buildx create --use
+  #     - name: Sign in to segmentation gitlab registry.
+  #       run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
+  #     - name: Build gateway image.
+  #       run: |
+  #         docker buildx build \
+  #           --platform linux/arm64 \
+  #           --tag registry.gitlab.com/segmentation964330/service/gateway \
+  #           --push \
+  #           ./gateway
+  # build-nginx:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Check out repo.
+  #       uses: actions/checkout@v4
+  #     - name: Setup buildx
+  #       run:  docker buildx create --use
+  #     - name: Sign in to segmentation gitlab registry.
+  #       run: echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
+  #     - name: Build nginx image.
+  #       run: |
+  #         docker buildx build \
+  #           --platform linux/arm64 \
+  #           --tag registry.gitlab.com/segmentation964330/service/nginx \
+  #           --push \
+  #           ./nginx
   deploy:
     runs-on: ubuntu-20.04
-    needs: [build-gateway, build-nginx]
     steps:
       - name: Check out repo.
         uses: actions/checkout@v4
@@ -56,18 +55,18 @@ jobs:
           host: ${{ secrets.ORACLE_HOST }}
           username: ${{ secrets.ORACLE_USERNAME }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
-          source: "./docker-compose.yml"
+          source: "."
           target: "."
-      - name: Pull docker and deploy.
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.ORACLE_HOST }}
-          username: ${{ secrets.ORACLE_USERNAME }}
-          key: ${{ secrets.ORACLE_SSH_KEY }}
-          envs: GITLAB_REGISTRY_USERNAME, GITLAB_REGISTRY_TOKEN
-          script: |
-            echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
-            sudo docker compose down
-            sudo docker compose pull
-            sudo docker compose up --detach
-            sudo docker image prune --force
+      # - name: Pull docker and deploy.
+      #   uses: appleboy/ssh-action@v1.0.3
+      #   with:
+      #     host: ${{ secrets.ORACLE_HOST }}
+      #     username: ${{ secrets.ORACLE_USERNAME }}
+      #     key: ${{ secrets.ORACLE_SSH_KEY }}
+      #     envs: GITLAB_REGISTRY_USERNAME, GITLAB_REGISTRY_TOKEN
+      #     script: |
+      #       echo "$GITLAB_REGISTRY_TOKEN" | docker login registry.gitlab.com -u "$GITLAB_REGISTRY_USERNAME" --password-stdin
+      #       sudo docker compose down
+      #       sudo docker compose pull
+      #       sudo docker compose up --detach
+      #       sudo docker image prune --force
