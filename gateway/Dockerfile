@@ -5,7 +5,7 @@ WORKDIR /home
 COPY ./requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPsY . .
+COPY . .
 
 ENV WORKING_DIR="/home"
 ENV LOGS_DIR="/home/artifacts/logs/"
