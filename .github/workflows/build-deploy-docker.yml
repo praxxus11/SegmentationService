@@ -15,7 +15,17 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
-      - name: Build, Push, Deploy.
+      - name: Check out repo.
+        uses: actions/checkout@v4
+      - name: Copy docker compose file to OCI.
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ORACLE_HOST }}
+          username: ${{ secrets.ORACLE_USERNAME }}
+          key: ${{ secrets.ORACLE_SSH_KEY }}
+          source: "./"
+          target: "./SegmentationService"
+      - name: Pull docker and deploy.
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.ORACLE_HOST }}
