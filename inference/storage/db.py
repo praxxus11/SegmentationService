@@ -31,7 +31,6 @@ class DB:
             FOREIGN KEY (img_id) REFERENCES Meta (img_id)
         )
         ''')
-
         self.con.commit()
     
     def insert_into_meta(self, meta):
