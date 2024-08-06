@@ -53,6 +53,8 @@ def infer(jpg_filename):
         clas_meta.pred_species_1_conf = classification_results[0]['confidence']
         clas_meta.pred_species_2 = classification_results[1]['species']
         clas_meta.pred_species_2_conf = classification_results[1]['confidence']
+        clas_meta.pred_species_3 = classification_results[2]['species']
+        clas_meta.pred_species_3_conf = classification_results[2]['confidence']
 
         current_pitcher_pred["classification"] = classification_results
         current_pitcher_pred["segmentation"] = {
