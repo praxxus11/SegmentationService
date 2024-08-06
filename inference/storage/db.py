@@ -25,13 +25,14 @@ class DB:
             pred_species_1_conf REAL,
             pred_species_2 TEXT,
             pred_species_2_conf REAL,
+            pred_species_3 TEXT,
+            pred_species_3_conf REAL,
             start_mili INTEGER,
             end_mili INTEGER,
             PRIMARY KEY (img_id, pitcher_id),
             FOREIGN KEY (img_id) REFERENCES Meta (img_id)
         )
         ''')
-
         self.con.commit()
     
     def insert_into_meta(self, meta):
@@ -44,8 +45,8 @@ class DB:
     
     def insert_into_class_meta(self, img_id, classification_meta):
         insert_sql = '''
-        INSERT INTO ClassificationMeta (img_id, pitcher_id, pred_species_1, pred_species_1_conf, pred_species_2, pred_species_2_conf, start_mili, end_mili)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO ClassificationMeta (img_id, pitcher_id, pred_species_1, pred_species_1_conf, pred_species_2, pred_species_2_conf, pred_species_3, pred_species_3_conf, start_mili, end_mili)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         '''
         self.cur.execute(insert_sql, (
             img_id,
@@ -54,6 +55,8 @@ class DB:
             classification_meta.pred_species_1_conf,
             classification_meta.pred_species_2,
             classification_meta.pred_species_2_conf,
+            classification_meta.pred_species_3,
+            classification_meta.pred_species_3_conf,
             classification_meta.start_mili,
             classification_meta.end_mili,
         ))
