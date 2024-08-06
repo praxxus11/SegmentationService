@@ -5,6 +5,7 @@ class Meta:
         self.end_mili = None
         self.num_masks = None
         self.classifications = []
+        self.num_threads = None
 
 class ClassificationMeta:
     def __init__(self):
@@ -15,3 +16,4 @@ class ClassificationMeta:
         self.pred_sepcies_2_conf = None
         self.start_mili = None
         self.end_mili = None
+        self.num_threads = None

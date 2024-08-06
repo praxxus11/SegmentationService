@@ -14,7 +14,8 @@ class DB:
             img_id TEXT PRIMARY KEY,
             start_mili INTEGER,
             end_mili INTEGER,
-            num_masks INTEGER
+            num_masks INTEGER,
+            num_threads INTEGER
         )
         ''')
         self.cur.execute('''
@@ -27,6 +28,7 @@ class DB:
             pred_species_2_conf REAL,
             start_mili INTEGER,
             end_mili INTEGER,
+            num_threads INTEGER,
             PRIMARY KEY (img_id, pitcher_id),
             FOREIGN KEY (img_id) REFERENCES Meta (img_id)
         )
@@ -36,16 +38,22 @@ class DB:
     
     def insert_into_meta(self, meta):
         insert_sql = '''
-        INSERT INTO Meta (img_id, start_mili, end_mili, num_masks)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Meta (img_id, start_mili, end_mili, num_masks, num_threads)
+        VALUES (?, ?, ?, ?, ?)
         '''
-        self.cur.execute(insert_sql, (meta.img_id, meta.start_mili, meta.end_mili, meta.num_masks))
+        self.cur.execute(insert_sql, (
+            meta.img_id,
+            meta.start_mili,
+            meta.end_mili,
+            meta.num_masks,
+            meta.num_threads,
+        ))
         self.con.commit()
     
     def insert_into_class_meta(self, img_id, classification_meta):
         insert_sql = '''
-        INSERT INTO ClassificationMeta (img_id, pitcher_id, pred_species_1, pred_species_1_conf, pred_species_2, pred_species_2_conf, start_mili, end_mili)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO ClassificationMeta (img_id, pitcher_id, pred_species_1, pred_species_1_conf, pred_species_2, pred_species_2_conf, start_mili, end_mili, num_threads)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         '''
         self.cur.execute(insert_sql, (
             img_id,
@@ -56,6 +64,7 @@ class DB:
             classification_meta.pred_species_2_conf,
             classification_meta.start_mili,
             classification_meta.end_mili,
+            classification_meta.num_threads,
         ))
         self.con.commit()
 

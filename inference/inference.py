@@ -6,6 +6,11 @@ import base64
 import time
 import logging
 
+#####
+import torch
+import random
+#####
+
 from segmentation.inference import predict as predict_segmentation
 from classification.inference import predict as predict_classification
 from storage.meta import Meta, ClassificationMeta
@@ -30,6 +35,10 @@ def infer(jpg_filename):
     seg_meta = Meta()
     seg_meta.img_id = jpg_filename.split(".")[0]
 
+    num_threads = random.randint(1, 12)
+    seg_meta.num_threads = num_threads
+    torch.set_num_threads(num_threads)
+
     logger.info(f"Starting segmentation for {jpg_filename}.")
     seg_meta.start_mili = time.time_ns() // 1_000_000
     numpy_binarymasks = predict_segmentation(numpy_image, 0.95)
@@ -43,6 +52,7 @@ def infer(jpg_filename):
     for i, binary_mask in enumerate(numpy_binarymasks):
         clas_meta = ClassificationMeta()
         clas_meta.pitcher_id = str(i)
+        clas_meta.num_threads = num_threads
         current_pitcher_pred = {}
 
         clas_meta.start_mili = time.time_ns() // 1_000_000
