@@ -1,1 +1,1 @@
-![Design](https://github.com/user-attachments/assets/b4b10b14-551a-4084-b3a6-b9e3570fdb57)
+![Design](./metaimages/Design.png)
