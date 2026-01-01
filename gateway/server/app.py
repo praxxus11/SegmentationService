@@ -13,13 +13,13 @@ from server.taskqueue import TaskQueue
 
 app = Flask(__name__)
 CORS(app)
-job_queue = TaskQueue("redis", "6379", "segmentation_queue")
+job_queue = TaskQueue("segmentation_redis", "6379", "segmentation_queue")
 logger = logging.getLogger(__name__)
 
 @app.route("/healthcheck")
 def hello_world():
     logger.info("Healthcheck run.")
-    return "Hello world.", 200
+    return "Hello world from nepenethes segmentation service", 200
 
 @app.route("/upload", methods=["POST"])
 def predict():
